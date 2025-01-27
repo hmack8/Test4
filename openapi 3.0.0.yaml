@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Disconnection Process API
+  description: API to manage Virgin Media disconnection processes for customers.
+  version: 1.0.0
+  termsOfService: https://example.com/terms/
+  contact:
+    name: API Owner
+    email: apiowner@example.com
+    url: https://example.com
+servers:
+  - url: https://api.example.com/v1
+    description: Production Server
+
+paths:
+  /disconnection:
+    get:
+      summary: Get disconnection details
+      description: Retrieves details about a customer’s disconnection request.
+      operationId: getDisconnection
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique ID of the customer
+          required: true
+          schema:
+            type: string
+        - name: requestDate
+          in: query
+          description: Date of the disconnection request
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Invalid parameters
+        '401':
+          description: Unauthorized request
+        '404':
+          description: Resource not found
+      security:
+        - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+x-testCases:
+  - name: Verify valid customerId returns 200 status
+    priority: High
+    owner: QA Team
+    recommendation: Validate with mock server
+    action: Review logs for errors
+    status: In Progress
+    timeStamp: 2025-01-27T10:00:00Z
+  - name: Verify unauthorized request returns 401
+    priority: Medium
+    owner: QA Team
+    recommendation: Validate token refresh mechanism
+    action: Check token storage
+    status: Pending
+    timeStamp: 2025-01-27T10:05:00Z
